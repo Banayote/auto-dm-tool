@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto DM Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Auto DM Tool</h1>
+
+        <!-- Login Section -->
+        <div id="login-section">
+            <h2>Login</h2>
+            <input type="email" id="email" placeholder="Email" required />
+            <input type="password" id="password" placeholder="Password" required />
+            <button onclick="logInUser()">Login</button>
+        </div>
+
+        <!-- DM Template Section (Hidden initially) -->
+        <div id="dm-section" style="display:none;">
+            <h2>Create DM Template</h2>
+            <input type="text" id="title" placeholder="Template Title" required />
+            <textarea id="message" placeholder="Write your DM message..." required></textarea>
+            <button onclick="addDMTemplate()">Save Template</button>
+
+            <h3>Saved Templates</h3>
+            <div id="template-list"></div>
+        </div>
+    </div>
+
+    <!-- Firebase and App Script -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
