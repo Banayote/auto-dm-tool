@@ -1,9 +1,4 @@
-// Import the necessary Firebase functions
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
-
-// Firebase configuration
+// Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAmCn-NTHpWNf-XkXPUeDxmESy1XzFm9Z0",
   authDomain: "auto-dm-tool.firebaseapp.com",
@@ -14,65 +9,64 @@ const firebaseConfig = {
   measurementId: "G-ETYVFJ8XM9"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
 
-// Function to handle user login
+// Firebase services
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Login function
 function logInUser() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
 
-  // Sign in the user with Firebase Authentication
-  signInWithEmailAndPassword(auth, email, password)
+  auth.signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      const user = userCredential.user;
-      console.log('Logged in:', user);
-      
-      // Hide the login section and show the DM template section after successful login
-      document.getElementById('login-section').style.display = 'none';
-      document.getElementById('dm-section').style.display = 'block';
-      
-      // Optionally load templates after login
-      loadDMTemplates();
+      console.log('User logged in:', userCredential.user.email);
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
     })
     .catch((error) => {
-      console.error('Login error:', error.message);
+      console.error('Login failed:', error.message);
+      alert('Login failed: ' + error.message);
     });
 }
 
-// Function to add a DM template to Firestore
-async function addDMTemplate() {
-  const title = document.getElementById('title').value;
-  const message = document.getElementById('message').value;
+// Save DM Template function
+function saveTemplate() {
+  const title = document.getElementById('dm-title').value;
+  const message = document.getElementById('dm-message').value;
 
-  try {
-    // Add a new document to the "dmTemplates" collection
-    await addDoc(collection(db, "dmTemplates"), {
-      title: title,
-      message: message,
-      timestamp: new Date(),
-    });
-
-    alert('Template saved!');
-    loadDMTemplates();  // Reload templates after saving a new one
-  } catch (e) {
-    console.error("Error adding template: ", e);
+  if (!title || !message) {
+    alert("Please fill in both fields!");
+    return;
   }
-}
 
-// Function to load all DM templates from Firestore
-async function loadDMTemplates() {
-  const querySnapshot = await getDocs(collection(db, "dmTemplates"));
-  const templateList = document.getElementById('template-list');
-  templateList.innerHTML = '';  // Clear the list before loading new templates
-
-  querySnapshot.forEach((doc) => {
-    const template = doc.data();
-    templateList.innerHTML += `<p><strong>${template.title}</strong><br>${template.message}</p>`;
+  db.collection('templates').add({
+    title: title,
+    message: message,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    alert('DM Template saved!');
+    document.getElementById('dm-title').value = '';
+    document.getElementById('dm-message').value = '';
+  })
+  .catch((error) => {
+    console.error('Error saving template:', error.message);
+    alert('Error saving template: ' + error.message);
   });
 }
 
-// Optionally, load templates when the page loads
-loadDMTemplates();
+// Logout function
+function logOutUser() {
+  auth.signOut()
+    .then(() => {
+      console.log('User logged out');
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('login-form').style.display = 'block';
+    })
+    .catch((error) => {
+      console.error('Logout error:', error.message);
+    });
+}
