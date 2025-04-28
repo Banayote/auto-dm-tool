@@ -1,42 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Auto DM Tool</title>
-
-  <!-- Firebase App (the core Firebase SDK) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <!-- Firebase Authentication -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <!-- Firebase Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-  <!-- Your custom app logic -->
-  <script src="app.js" defer></script>
-
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input, textarea, button { display: block; margin: 10px 0; width: 300px; padding: 8px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto DM Tool - Register / Login</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-  <h1>Auto DM Tool</h1>
+    <h1>Register</h1>
+    <input type="email" id="registerEmail" placeholder="Email">
+    <input type="password" id="registerPassword" placeholder="Password">
+    <button onclick="registerUser()">Register</button>
 
-  <div id="login-form">
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+    <h1>Login</h1>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
     <button onclick="logInUser()">Login</button>
-  </div>
 
-  <div id="dashboard" style="display: none;">
-    <h2>Dashboard</h2>
-    <input type="text" id="dm-title" placeholder="DM Title" />
-    <textarea id="dm-message" placeholder="DM Message"></textarea>
-    <button onclick="saveTemplate()">Save DM Template</button>
-    <button onclick="logOutUser()">Logout</button>
-  </div>
+    <script>
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmCn-NTHpWNf-XkXPUeDxmESy1XzFm9Z0",
+            authDomain: "auto-dm-tool.firebaseapp.com",
+            projectId: "auto-dm-tool",
+            storageBucket: "auto-dm-tool.appspot.com",
+            messagingSenderId: "311728143798",
+            appId: "1:311728143798:web:b1e85d8893dfa60492d517",
+            measurementId: "G-ETYVFJ8XM9"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Register new user
+        function registerUser() {
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    alert('Registration successful!');
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert('Registration failed: ' + error.message);
+                });
+        }
+
+        // Login existing user
+        function logInUser() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    alert('Login successful!');
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert('Login failed: ' + error.message);
+                });
+        }
+    </script>
 
 </body>
 </html>
