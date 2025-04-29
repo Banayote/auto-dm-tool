@@ -41,11 +41,10 @@
         })
         .catch(err => alert("Error: " + err));
       } else {
-        alert("User not logged in or missing username.");
+        alert("User not logged in or username missing.");
       }
     }
 
-    // Ensure user is signed in
     auth.onAuthStateChanged(user => {
       if (!user) {
         window.location.href = "login.html";
