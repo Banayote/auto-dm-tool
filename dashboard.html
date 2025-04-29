@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - Auto DM Tool</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <h2>Welcome to your dashboard</h2>
+  <p>Add your Instagram account to enable Auto DM</p>
+
+  <input type="text" id="instaUsername" placeholder="Instagram Username">
+  <button onclick="saveInstagram()">Save</button>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAmCn-NTHpWNf-XkXPUeDxmESy1XzFm9Z0",
+      authDomain: "auto-dm-tool.firebaseapp.com",
+      projectId: "auto-dm-tool",
+      storageBucket: "auto-dm-tool.appspot.com",
+      messagingSenderId: "311728143798",
+      appId: "1:311728143798:web:b1e85d8893dfa60492d517"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    function saveInstagram() {
+      const username = document.getElementById("instaUsername").value;
+      const user = auth.currentUser;
+
+      if (user && username) {
+        db.collection("users").doc(user.uid).set({
+          instagram: username
+        }, { merge: true })
+        .then(() => {
+          alert("Instagram account saved!");
+        })
+        .catch(err => alert("Error: " + err));
+      } else {
+        alert("User not logged in or missing username.");
+      }
+    }
+
+    // Ensure user is signed in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+
+</body>
+</html>
